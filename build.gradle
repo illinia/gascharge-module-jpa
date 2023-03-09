@@ -3,10 +3,11 @@ plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-group = 'com.taemin.gascharge'
-version = 'SNAPSHOT'
+group = 'com.gascharge.taemin'
+version = '0.0.1'
 
 repositories {
     mavenCentral()
@@ -47,6 +48,15 @@ dependencies {
     implementation 'com.mysql:mysql-connector-j:8.0.32'
 }
 
+//shadowJar {
+//    // 메인 클래스 설정
+//    manifest {
+//        attributes 'Main-Class': 'com.gascharge.taemin'
+//    }
+//    // 의존성 제외 설정
+//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+//}
+
 def generated='src/main/generated'
 sourceSets {
     main.java.srcDirs += [ generated ]
@@ -66,6 +76,14 @@ bootJar {
 
 jar {
     enabled = true
+    manifest {
+        attributes "Main-Class": "com.gascharge.taemin"
+    }
+    finalizedBy shadowJar
+
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
 }
 
 publishing {
@@ -81,7 +99,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from(components.java)
+            from components.java
         }
     }
 }
