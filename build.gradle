@@ -74,6 +74,10 @@ bootJar {
     enabled = false
 }
 
+shadowJar {
+    archiveClassifier.set('')
+}
+
 jar {
     enabled = true
     manifest {
@@ -100,7 +104,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from components.java
+            artifacts = [ shadowJar ]
         }
     }
 }
