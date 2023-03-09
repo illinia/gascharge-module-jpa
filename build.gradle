@@ -77,13 +77,14 @@ bootJar {
 jar {
     enabled = true
     manifest {
-        attributes "Main-Class": "com.gascharge.taemin"
+//        attributes "Main-Class": "com.gascharge.taemin.Main"
     }
     finalizedBy shadowJar
 
-//    from {
-//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-//    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 publishing {
