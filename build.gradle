@@ -39,23 +39,11 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
 
-//    api 'com.github.illinia:build-logic-spring-boot-application-domain:0.0.1'
-//    api 'com.github.illinia:build-logic-spring-boot-application-querydsl:0.0.1'
-
     api 'org.springframework.boot:spring-boot-starter-json'
     api 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'com.mysql:mysql-connector-j:8.0.32'
 }
-
-//shadowJar {
-//    // 메인 클래스 설정
-//    manifest {
-//        attributes 'Main-Class': 'com.gascharge.taemin'
-//    }
-//    // 의존성 제외 설정
-//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
-//}
 
 def generated='src/main/generated'
 sourceSets {
@@ -80,11 +68,7 @@ shadowJar {
 
 jar {
     enabled = false
-    manifest {
-//        attributes "Main-Class": "com.gascharge.taemin.Main"
-    }
     finalizedBy shadowJar
-
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
