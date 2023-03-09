@@ -5,11 +5,10 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.github.illinia'
-version = '0.0.1'
+group = 'com.taemin.gascharge'
+version = 'SNAPSHOT'
 
 repositories {
-    maven { url 'https://jitpack.io' }
     mavenCentral()
 }
 
@@ -73,7 +72,16 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/illinia/")
+            url = uri("https://maven.pkg.github.com/illinia/gascharge-module-jpa")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
         }
     }
 }
