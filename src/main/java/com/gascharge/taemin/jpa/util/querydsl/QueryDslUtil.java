@@ -1,4 +1,4 @@
-package com.gascharge.taemin.util.querydsl;
+package com.gascharge.taemin.jpa.util.querydsl;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
