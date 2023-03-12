@@ -1,16 +1,21 @@
 plugins {
-    id 'groovy-gradle-plugin'
-    id 'org.springframework.boot' version '2.7.3'
+    id 'org.springframework.boot' version '2.7.3' apply false
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'java-library'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 group = 'com.gascharge.taemin'
-version = '0.0.1'
+version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
 }
 
 configurations {
@@ -32,17 +37,17 @@ dependencies {
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
-    implementation 'org.springframework.boot:spring-boot-starter'
+    api 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     runtimeOnly 'com.h2database:h2'
 
     api 'org.springframework.boot:spring-boot-starter-json'
     api 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation 'com.mysql:mysql-connector-j:8.0.32'
+    api 'com.mysql:mysql-connector-j:8.0.32'
 }
 
 def generated='src/main/generated'
@@ -58,28 +63,11 @@ clean.doLast {
     file(generated).deleteDir()
 }
 
-bootJar {
-    enabled = false
-}
-
-shadowJar {
-    archiveClassifier.set('')
-}
-
-jar {
-    enabled = false
-    finalizedBy shadowJar
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/illinia/gascharge-module-jpa")
+            url = uri("https://maven.pkg.github.com/illinia/gascharge-lib")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
@@ -88,11 +76,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            artifacts = [ shadowJar ]
+            from(components.java)
         }
     }
 }
-
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '7.5.1'
-//}
